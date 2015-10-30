@@ -36,7 +36,7 @@
      (doseq [log (find-all-logs)]
        (analyze-log log))
      (handle MalformedLogEntry [text msg]
-       (continue no-such-restart))))
+       (continue skip-log-entry))))
 
 ;;        (continue use-value {:failed-to-parse text}))))
 ;; conj2015.n03-kit-multi-restarts> (log-analyzer)
