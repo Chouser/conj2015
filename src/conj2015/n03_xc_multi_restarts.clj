@@ -24,7 +24,7 @@
 
 (defn log-analyzer []
   (binding [*malformed-log-entry-error*
-            (fn [msg info] (*malformed-log-entry-error* "foo" {:text "bar"}) {:failed-to-parse (:text info)})]
+            (fn [msg info] {:failed-to-parse (:text info)})]
     (doseq [log (find-all-logs)]
       (analyze-log log))))
 
