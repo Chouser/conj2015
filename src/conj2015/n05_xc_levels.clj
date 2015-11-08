@@ -12,13 +12,13 @@
 
 ;; === restarts ===
 (defn ^:dynamic *use-value* [value]
-  (throw (ex-info "Restart *use-value* is unbound.")))
+  (throw (ex-info "Restart *use-value* is unbound." {:value value})))
 
 (defn ^:dynamic *skip-log-entry* []
-  (throw (ex-info "Restart *skip-log-entry* is unbound.")))
+  (throw (ex-info "Restart *skip-log-entry* is unbound." {})))
 
 (defn ^:dynamic *reparse-entry* [fixed-text]
-  (throw (ex-info "Restart *reparse-entry* is unbound.")))
+  (throw (ex-info "Restart *reparse-entry* is unbound." {})))
 
 ;; === application code ===
 (defn parse-log-entry [text]
