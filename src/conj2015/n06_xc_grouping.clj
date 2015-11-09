@@ -12,7 +12,7 @@
   (*error* msg info))
 
 (defn ^:dynamic *malformed-log-entry-error* [msg info]
-  (*malformed-log-entry-error* msg info))
+  (*malformed-entry-error* msg info))
 
 (defn ^:dynamic *math-error* [msg info]
   (*error* msg info))
