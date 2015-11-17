@@ -18,8 +18,9 @@
     (keep #(try
              (parse-log-entry %)
              (catch clojure.lang.ExceptionInfo e
-               (if (= ::malformed-log-entry (:type (ex-data e)))
-                 nil ;; Parse bad entries as nil, causing them to be skipped
+               (if (= ::malformed-log-entry
+                      (:type (ex-data e)))
+                 nil ;; Skip bad entries
                  (throw e))))
           lines)))
 

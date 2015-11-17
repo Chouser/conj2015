@@ -15,7 +15,8 @@
       :reparse-entry (fn [fixed-text]
                        (parse-log-entry fixed-text))]
      (throw+ {:type ::malformed-log-entry :text text}
-             "Log entry was malformed; could not parse."))))
+             (str "Log entry was malformed;"
+                  " could not parse.")))))
 
 (defn parse-log-file [log]
   (let [lines (with-open [stream (io/reader log)]

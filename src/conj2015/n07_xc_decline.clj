@@ -34,12 +34,14 @@
              (parse-log-entry %)) lines)))
 
 (defn analyze-log [log]
-  (let [decline-malformed-log-entry-error *malformed-log-entry-error*]
+  (let [decline-malformed-log-entry-error
+          *malformed-log-entry-error*]
     (binding [*malformed-log-entry-error*
               (fn [msg {:as info :keys [text]}]
                 (if (= "bad1" text)
                   (*use-value* {:bad1-is-ok text})
-                  (decline-malformed-log-entry-error msg info)))]
+                  (decline-malformed-log-entry-error
+                     msg info)))]
       (doseq [entry (parse-log-file log)]
         (analyze-entry entry)))))
 

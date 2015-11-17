@@ -37,7 +37,8 @@
     {:successfully-parsed text}
     (binding [*use-value* identity]
       (signal {:no-handler-found text}
-              *malformed-log-entry-error* "Log entry was malformed; could not parse."
+              *malformed-log-entry-error*
+              "Log entry was malformed; could not parse."
               {:text text}))))
 
 (defn parse-log-file [log]
