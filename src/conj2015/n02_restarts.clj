@@ -9,7 +9,7 @@
 (defn parse-log-entry [text]
   (if (well-formed-log-entry? text)
     {:successfully-parsed text}
-    (throw+ {:type ::malformed-log-entry :text text}
+    (throw+ {:type ::malformed-log-entry, :text text}
             "Log entry was malformed; could not parse.")))
 
 (defn parse-log-file [log]

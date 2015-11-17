@@ -9,23 +9,19 @@
   (throw (ex-info msg info)))
 
 ;; === restarts ===
-(defn ^:dynamic *use-value* [value]
-  (throw (ex-info "Restart *use-value* is unbound." {:value value})))
-
-(defn ^:dynamic *skip-log-entry* []
-  (throw (ex-info "Restart *skip-log-entry* is unbound." {})))
-
-(defn ^:dynamic *reparse-entry* [fixed-text]
-  (throw (ex-info "Restart *reparse-entry* is unbound." {})))
+(def ^:dynamic *use-value*)
+(def ^:dynamic *skip-log-entry*)
+(def ^:dynamic *reparse-entry*)
 
 ;; === application code ===
-(defn parse-log-entry [text]
-  (if (well-formed-log-entry? text)
-    {:successfully-parsed text}
-    (binding [*use-value* identity
-              *reparse-entry* parse-log-entry]
-      (*malformed-log-entry-error* "Log entry was malformed; could not parse."
-                                   {:text text}))))
+    (defn parse-log-entry [text]
+      (if (well-formed-log-entry? text)
+        {:successfully-parsed text}
+        (binding [*use-value* identity
+                  *reparse-entry* parse-log-entry]
+          (*malformed-log-entry-error*
+           "Log entry was malformed; could not parse."
+           {:text text}))))
 
 (defn parse-log-file [log]
   (let [lines (with-open [stream (io/reader log)]
@@ -39,7 +35,9 @@
 
 (defn log-analyzer []
   (binding [*malformed-log-entry-error*
-            (fn [msg info] (*use-value* {:failed-to-parse (:text info)}))]
+            (fn [msg info]
+              (*use-value*
+               {:failed-to-parse (:text info)}))]
     (doseq [log (find-all-logs)]
       (analyze-log log))))
 
@@ -55,7 +53,6 @@
 ;; {:successfully-parsed "h"}
 ;; {:successfully-parsed "i"}
 ;; nil
-
 
 ;;             (fn [msg info] (*reparse-entry* (str "better than " (:text info))))]
 ;; conj2015.n03-xc-multi-restarts> (log-analyzer)
@@ -83,3 +80,11 @@
 
 ;; raise during handling
 ;; StackOverflowError   clojure.lang.PersistentHashMap$BitmapIndexedNode.index (PersistentHashMap.java:677)
+
+;; remove binding for *use-value*:
+;; conj2015.n04-xc-named-restarts> (log-analyzer)
+;; {:successfully-parsed "a"}
+;; {:successfully-parsed "b"}
+;; {:successfully-parsed "c"}
+;; {:successfully-parsed "D"}
+;; IllegalStateException Attempting to call unbound fn: #'conj2015.n04-xc-named-restarts/*use-value*  clojure.lang.Var$Unbound.throwArity (Var.java:43)

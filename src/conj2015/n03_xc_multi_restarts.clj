@@ -10,8 +10,9 @@
 (defn parse-log-entry [text]
   (if (well-formed-log-entry? text)
     {:successfully-parsed text}
-    (*malformed-log-entry-error* "Log entry was malformed; could not parse."
-                                 {:text text})))
+    (*malformed-log-entry-error*
+       "Log entry was malformed; could not parse."
+       {:text text})))
 
 (defn parse-log-file [log]
   (let [lines (with-open [stream (io/reader log)]
@@ -24,7 +25,7 @@
 
 (defn log-analyzer []
   (binding [*malformed-log-entry-error*
-            (fn [msg info] {:failed-to-parse (:text info)})]
+            (constantly nil)]
     (doseq [log (find-all-logs)]
       (analyze-log log))))
 

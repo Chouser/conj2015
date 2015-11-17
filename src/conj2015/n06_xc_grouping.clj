@@ -8,17 +8,17 @@
 (defn ^:dynamic *error* [msg info]
   (throw (ex-info msg info)))
 
-(defn ^:dynamic *malformed-entry-error* [msg info]
-  (*error* msg info))
-
-(defn ^:dynamic *malformed-log-entry-error* [msg info]
-  (*malformed-entry-error* msg info))
-
 (defn ^:dynamic *math-error* [msg info]
   (*error* msg info))
 
 (defn ^:dynamic *sqrt-of-negative* [msg info]
   (*math-error* msg info))
+
+(defn ^:dynamic *malformed-entry-error* [msg info]
+  (*error* msg info))
+
+(defn ^:dynamic *malformed-log-entry-error* [msg info]
+  (*malformed-entry-error* msg info))
 
 ;; === restarts ===
 (defn ^:dynamic *use-value* [value]
@@ -35,7 +35,7 @@
 (defn parse-log-file [log]
   (let [lines (with-open [stream (io/reader log)]
                 (doall (line-seq stream)))]
-    (keep #(parse-log-entry %) lines)))
+    (keep parse-log-entry lines)))
 
 (defn analyze-log [log]
   (doseq [entry (parse-log-file log)]

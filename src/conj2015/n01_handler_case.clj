@@ -7,8 +7,10 @@
 (defn parse-log-entry [text]
   (if (well-formed-log-entry? text)
     {:successfully-parsed text}
-    (throw (ex-info (str "Log entry was malformed; could not parse.")
-                    {:type ::malformed-log-entry :text text}))))
+    (throw (ex-info (str "Log entry was malformed;"
+                         " could not parse.")
+                    {:type ::malformed-log-entry
+                     :text text}))))
 
 (defn parse-log-file [log]
   (let [lines (with-open [stream (io/reader log)]
